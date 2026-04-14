@@ -1,0 +1,6 @@
+customer_id,first_name,last_name,email,city,state,lifetime_value
+1,Ana,Silva,ana.silva@example.com,Austin,TX,1200.50
+2,Marcus,Lee,marcus.lee@gmail.com,Seattle,WA,640.10
+3,Nina,Patel,nina.patel@yahoo.com,San Francisco,CA,410.25
+4,Diego,Santos,diego.santos@outlook.com,Miami,FL,980.00
+5,Sarah,Johnson,sarah.johnson@gmail.com,Denver,CO,275.90
