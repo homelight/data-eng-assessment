@@ -1,15 +1,20 @@
 COMPOSE := docker compose
 
-.PHONY: setup up down logs
+.DEFAULT_GOAL := help
 
-setup:
+.PHONY: help setup up down logs
+
+help: ## Show available make targets
+	@awk 'BEGIN {FS = ":.*## "; printf "\nAvailable commands:\n\n"} /^[a-zA-Z_-]+:.*## / {printf "  %-10s %s\n", $$1, $$2} END {printf "\n"}' $(MAKEFILE_LIST)
+
+setup: ## Build image and initialize local services
 	$(COMPOSE) up --build airflow-init
 
-up:
-	$(COMPOSE) up --build -d airflow-webserver airflow-scheduler
+up: ## Start Airflow, Postgres, and JupyterLab
+	$(COMPOSE) up --build -d airflow-webserver airflow-scheduler jupyter
 
-down:
+down: ## Stop containers and remove volumes
 	$(COMPOSE) down --volumes --remove-orphans
 
-logs:
-	$(COMPOSE) logs -f airflow-webserver airflow-scheduler postgres
+logs: ## Tail Airflow, Postgres, and JupyterLab logs
+	$(COMPOSE) logs -f airflow-webserver airflow-scheduler postgres jupyter

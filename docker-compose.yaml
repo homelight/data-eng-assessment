@@ -62,7 +62,7 @@ services:
     <<: *airflow-common
     command: airflow webserver
     ports:
-      - "8080:8080"
+      - "8008:8080"
     depends_on:
       postgres:
         condition: service_healthy
@@ -77,6 +77,31 @@ services:
         condition: service_healthy
       airflow-init:
         condition: service_completed_successfully
+
+  jupyter:
+    build:
+      context: .
+      dockerfile: Dockerfile.jupyter
+    command:
+      - /bin/bash
+      - -c
+      - |
+        python -m jupyter lab \
+          --ip=0.0.0.0 \
+          --port=8888 \
+          --no-browser \
+          --allow-root \
+          --ServerApp.token='' \
+          --ServerApp.password='' \
+          --ServerApp.allow_origin='*' \
+          --ServerApp.root_dir=/workspace
+    ports:
+      - "8888:8888"
+    volumes:
+      - ./:/workspace
+    depends_on:
+      postgres:
+        condition: service_healthy
 
 volumes:
   postgres-db-volume:

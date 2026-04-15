@@ -6,7 +6,7 @@ It gives candidates a small but realistic environment with:
 - Airflow for orchestration
 - Postgres for storage
 - Docker Compose for local setup
-- A simple local seed-data DAG
+- JupyterLab for interactive Python exploration
 - An API-driven DAG that loads Pokemon data into relational Postgres tables
 
 The goal is to keep the project fast to boot, easy to understand, and easy to extend during an interview.
@@ -20,9 +20,9 @@ The goal is to keep the project fast to boot, easy to understand, and easy to ex
 
 ## Project structure
 
-- `dags/assessment_pipeline.py`: sample seed-data DAG used in the interview environment
 - `dags/gotta_catch_em_all.py`: API ingestion DAG for the first 150 Pokemon
-- `include/data/customers.csv`: seed data loaded by the DAG
+- `include/sql/sql_assessment_seed.sql`: SQL seed data for the SQL assessment tables
+- `notebooks/`: workspace for interactive notebooks
 - `Dockerfile`: custom Airflow image based on Astronomer runtime
 - `docker-compose.yaml`: local Airflow + Postgres services
 - `Makefile`: quick setup commands
@@ -48,13 +48,20 @@ make up
 
 3. Open Airflow:
 
-- URL: [http://localhost:8080](http://localhost:8080)
+- URL: [http://localhost:8008](http://localhost:8008)
 - Username: `admin`
 - Password: `admin`
 
-4. Trigger either `customer_postgres_pipeline` or `gotta_catch_em_all`.
+4. Trigger `gotta_catch_em_all`.
 
-5. Stop everything and remove volumes when finished:
+5. Open JupyterLab for interactive Python work:
+
+- URL: [http://localhost:8888/lab](http://localhost:8888/lab)
+- No token or password required
+- The repository is mounted into the Jupyter container at `/workspace`
+- `pandas` and `numpy` are preinstalled
+
+6. Stop everything and remove volumes when finished:
 
 ```bash
 make down
@@ -62,21 +69,13 @@ make down
 
 ## Make commands
 
-- `make setup`: builds the image, waits for Postgres, initializes the Airflow metadata database, creates the Airflow admin user, and seeds the SQL assessment tables
-- `make up`: starts the Airflow webserver, Airflow scheduler, and Postgres services
+- `make help`: shows available commands
+- `make setup`: builds the image, installs the Python dependencies, initializes the Airflow metadata database, creates the Airflow admin user, and seeds the SQL assessment tables
+- `make up`: starts the Airflow webserver, Airflow scheduler, Postgres, and JupyterLab
 - `make down`: stops containers and removes local Docker volumes
-- `make logs`: tails service logs
+- `make logs`: tails Airflow, Postgres, and JupyterLab logs
 
 ## DAGs in the project
-
-### `customer_postgres_pipeline`
-
-This DAG is intentionally small and interview-friendly:
-
-1. Creates `staging` and `analytics` schemas in Postgres
-2. Loads seed customer data from `include/data/customers.csv` into `staging.customers_raw`
-3. Builds `analytics.customer_summary`
-4. Logs a small preview of transformed rows
 
 ### `gotta_catch_em_all`
 
@@ -122,6 +121,21 @@ Example connection string:
 ```text
 postgresql://airflow:airflow@localhost:5432/airflow
 ```
+
+## Jupyter environment
+
+The interactive notebook environment is part of the same Docker setup:
+
+1. Run `make setup`
+2. Run `make up`
+3. Open [http://localhost:8888/lab](http://localhost:8888/lab)
+
+This environment is intended for quick Python exploration during the assessment and includes:
+
+- Python 3.12
+- `pandas`
+- `numpy`
+- JupyterLab
 
 ## Notes
 
