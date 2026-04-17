@@ -23,6 +23,7 @@ The goal is to keep the project fast to boot, easy to understand, and easy to ex
 - `dags/gotta_catch_em_all.py`: API ingestion DAG for the first 150 Pokemon
 - `include/sql/sql_assessment_seed.sql`: SQL seed data for the SQL assessment tables
 - `notebooks/`: workspace for interactive notebooks
+- `notebooks/sql_playground.ipynb`: sample notebook for querying Postgres with SQLAlchemy and pandas
 - `Dockerfile`: custom Airflow image based on Astronomer runtime
 - `docker-compose.yaml`: local Airflow + Postgres services
 - `Makefile`: quick setup commands
@@ -59,7 +60,8 @@ make up
 - URL: [http://localhost:8888/lab](http://localhost:8888/lab)
 - No token or password required
 - The repository is mounted into the Jupyter container at `/workspace`
-- `pandas` and `numpy` are preinstalled
+- `pandas`, `numpy`, `sqlalchemy`, and `psycopg2` are preinstalled
+- A sample notebook is available at `notebooks/sql_playground.ipynb`
 
 6. Stop everything and remove volumes when finished:
 
@@ -135,6 +137,8 @@ This environment is intended for quick Python exploration during the assessment 
 - Python 3.12
 - `pandas`
 - `numpy`
+- `sqlalchemy`
+- `psycopg2`
 - JupyterLab
 
 ## Notes
